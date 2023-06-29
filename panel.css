@@ -1,0 +1,82 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: #f2f2f2;
+    padding: 10px;
+    align-items: center;
+}
+
+#date-time {
+    margin-right: 10px;
+}
+
+#user-info {
+    margin-right: 10px;
+}
+
+button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #5a5c7b;
+}
+
+#logout-btn {
+    background: red;
+    float: right;
+}
+
+h1 {
+    margin-top: 20px;
+}
+
+#talepler-table {
+    width: 96%;
+    border-collapse: collapse;
+    margin: 2%;
+}
+
+    #talepler-table th,
+    #talepler-table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+
+    #talepler-table th {
+        background-color: #f2f2f2;
+    }
+
+    #talepler-table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    #talepler-table tbody tr:hover {
+        background-color: #e5e5e5;
+    }
+
+/* İşleme al butonu */
+.isleme-al-btn {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Onayla butonu */
+.onayla-btn {
+    background-color: #2ecc71;
+    color: white;
+    margin: 1%
+}
+
+/* Reddet butonu */
+.reddet-btn {
+    background-color: #e74c3c;
+    color: white;
+}

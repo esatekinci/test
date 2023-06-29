@@ -1,0 +1,41 @@
+﻿body {
+    background-color: black;
+    color: white;
+}
+
+h1 {
+    color: limegreen;
+}
+
+form {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+label {
+    color: limegreen;
+}
+
+input[type="text"],
+select {
+    background-color: #222;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+}
+
+input[type="submit"] {
+    background-color: limegreen;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+    input[type="submit"]:hover {
+        background-color: darkgreen;
+    }
