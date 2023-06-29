@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tablar</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: limegreen;
+            text-align: center;
+        }
+
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+            .tab button {
+                background-color: inherit;
+                float: left;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                padding: 14px 16px;
+                transition: 0.3s;
+                font-size: 17px;
+                width: 50%;
+            }
+
+                .tab button:hover {
+                    background-color: #ddd;
+                }
+
+                .tab button.active {
+                    background-color: #ccc;
+                }
+
+        .tabcontent {
+            display: none;
+            padding: 1%;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 5px;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        label {
+            color: limegreen;
+        }
+
+        input[type="text"],
+        select {
+            background-color: #222;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+        }
+
+        input[type="submit"] {
+            background-color: limegreen;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+            input[type="submit"]:hover {
+                background-color: darkgreen;
+            }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f1f1;
+            color: black;
+        }
+
+        .bekleyenbonus th,
+        .bekleyenbonus td {
+            text-align: center;
+        }
+
+        .bekleyenbonus th {
+            background-color: #111;
+            color: #fff;
+        }
+
+        .bekleyenbonus td {
+            background-color: #f1f1f1;
+            color: #111;
+        }
+        .success-message {
+            color: #111;
+            text-align: center;
+            background: limegreen;
+            border-radius: 5px;
+            padding: 1%;
+            width: 50%;
+            margin: 1% 25%;
+        }
+    </style>
+    <script>$(document).ready(function () {
+            // İlk tabı açık olarak ayarla
+            openTab('tab1');
+
+            // Tab butonlarına tıklama olayı
+            $('.tab button').click(function () {
+                var tabId = $(this).attr('id');
+                openTab(tabId);
+                $("#pending-results").html("");
+                $("#response-message").html("");
+            });
+
+            function openTab(tabId) {
+                // Tüm tab içeriklerini gizle
+                $('.tabcontent').hide();
+
+                // Tüm tab butonlarındaki aktif sınıfını kaldır
+                $('.tab button').removeClass('active');
+
+                // Seçilen taba ait içeriği göster
+                $('#' + tabId + '-content').show();
+
+                // Seçilen tab butonunu aktif yap
+                $('#' + tabId).addClass('active');
+            }
+
+            $(document).ready(function () {
+                // Bonus seçeneklerini talep etmek için AJAX isteği gönderme
+                $.ajax({
+                    url: 'get-bonus.php',
+                    type: 'GET',
+                    success: function (response) {
+                        var options = JSON.parse(response);
+                        options.forEach(function (option) {
+                            $('#bonus').append('<option value="' + option.bonus_id + '">' + option.bonus_adi + '</option>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Hata: ' + error);
+                    }
+                });
+
+                $('#bonus-form').submit(function (event) {
+                    event.preventDefault(); // Formun varsayılan gönderme davranışını engelleme
+                    var formData = $(this).serialize(); // Form verilerini al
+                    $.ajax({
+                        url: 'bonus-talebi.php',
+                        type: 'POST',
+                        data: formData,
+                        success: function (response) {
+                            $('#response-message').append('<div class="success-message">' + response + '</div>'); // Başarılı yanıtı göster
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Hata: ' + error); // Hata durumunda hata mesajını göster
+                        }
+                    });
+                });
+                $('#pending-form').submit(function (event) {
+                    event.preventDefault(); // Formun varsayılan gönderme davranışını engelleme
+                    var formData = $(this).serialize(); // Form verilerini al
+                    $.ajax({
+                        url: 'check-talep.php',
+                        type: 'POST',
+                        data: formData,
+                        success: function (response) {
+                            $('#pending-results').html(response); // Sonuçları göster
+                            console.log(response);
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Hata: ' + error); // Hata durumunda hata mesajını göster
+                            console.log(formData);
+                        }
+                    });
+                });
+            });
+        });</script>
+</head>
+<body>
+    <div class="container">
+        <div class="tab">
+            <button id="tab1" class="active">Bonus Talebi</button>
+            <button id="tab2">Talep Sorgusu</button>
+        </div>
+
+        <div id="tab1-content" class="tabcontent">
+            <h1>Bonus Talebi</h1>
+            <form id="bonus-form">
+                <label for="username">Kullanıcı Adı:</label>
+                <br>
+                <input type="text" id="username" name="username" required>
+                <br><br>
+                <label for="bonus">Bonus Seçimi:</label>
+                <br>
+                <select id="bonus" name="bonus" required>
+                    <option value="">Seçiniz</option>
+                </select>
+                <br><br>
+                <input type="submit" value="Talep Et">
+            </form>
+            <div id="response-message"></div> <!-- Sonuçların görüntüleneceği alan -->
+        </div>
+
+        <div id="tab2-content" class="tabcontent">
+            <h1>Bekleyen İşlemler</h1>
+            <form id="pending-form">
+                <label for="pending-username">Kullanıcı Adı:</label>
+                <br>
+                <input type="text" id="pending-username" name="pending-username" required>
+                <br><br>
+                <input type="submit" value="Sorgula">
+            </form>
+            <div id="pending-results"></div> <!-- Sonuçların görüntüleneceği alan -->
+        </div>
+    </div>
+</body>
+</html>
